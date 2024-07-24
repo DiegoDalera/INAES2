@@ -16,12 +16,15 @@ function App() {
         formData.append('socios', sociosFile);
         formData.append('prestamos', prestamosFile);
 
+        console.log('Enviando archivos:', sociosFile, prestamosFile);
+
         try {
             const response = await axios.post('/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+            console.log('Respuesta del servidor:', response.data);
             alert(response.data);
         } catch (error) {
             console.error('Error uploading files:', error);
@@ -47,3 +50,4 @@ function App() {
 }
 
 export default App;
+

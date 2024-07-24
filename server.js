@@ -1,24 +1,26 @@
-
-// server.js
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const path = require('path');
+const { procesarArchivos } = require('./procesarArchivos');
 
 const app = express();
 
 // Middleware para manejar la carga de archivos
 app.use(fileUpload());
 
-const { procesarArchivos } = require('./procesarArchivos');
-
-// Endpoint para subir archivos
 app.post('/upload', (req, res) => {
+    console.log("Llegó al upload");
+
     if (!req.files || Object.keys(req.files).length === 0) {
         return res.status(400).send('No files were uploaded.');
     }
 
+    console.log("Archivos recibidos:", req.files);
+
     let sociosFile = req.files.socios;
     let prestamosFile = req.files.prestamos;
+
+    console.log("Voy a enviar a procesar archivos");
 
     // Procesar archivos y generar archivos de texto
     procesarArchivos(sociosFile, prestamosFile);
