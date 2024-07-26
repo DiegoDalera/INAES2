@@ -18,23 +18,36 @@ function procesarArchivos(sociosFile, prestamosFile) {
     console.log('Socios Data:', sociosData);
     console.log('Prestamos Data:', prestamosData);
 
-    // Unir los datos por el número de legal
-    const mergedData = sociosData.map(socio => {
-        const prestamo = prestamosData.find(p => p.LEGAJO === socio['LEGAJO BBVA']);
-        if (prestamo) {
-            return { ...socio, ...prestamo };
+    // Verificar las claves de los objetos en sociosData
+    if (sociosData.length > 0) {
+        console.log('Claves de un objeto en sociosData:', Object.keys(sociosData[0]));
+    }
+    if (prestamosData.length > 0) {
+        console.log('Claves de un objeto en prestamosData:', Object.keys(prestamosData[0]));
+    }
+
+    // Crear un mapa para una búsqueda rápida de socios por 'LEGAJO BBVA'
+    const sociosMap = sociosData.reduce((map, socio) => {
+        const key = socio['LEGAJO BBVA'];
+        if (key === undefined) {
+            console.log('Objeto de socio sin LEGAJO BBVA:', socio);
         }
-        return socio;
+        map[key] = socio;
+        return map;
+    }, {});
+
+    console.log('Mapa de Socios:', sociosMap);
+
+    // Unir los datos por el número de legajo y asegurarse de que el resultado tenga la cantidad de registros de `prestamosData`
+    const mergedData = prestamosData.map(prestamo => {
+        const socio = sociosMap[prestamo.LEGAJO] || {};
+        return { ...prestamo, ...socio };
     });
 
-    // Filtrar los datos de los socios con préstamos
-    const sociosConPrestamos = mergedData.filter(data => data.LEGAJO !== undefined);
+    console.log('Datos Unificados:', mergedData);
 
-    // Agregar registros de depuración
-    console.log('Socios con Préstamos:', sociosConPrestamos);
-
-    // Generar archivo de texto
-    generarArchivoAlta(sociosConPrestamos, 'alta_deudores.txt');
+    // Retornar los datos unificados
+    return mergedData;
 }
 
 function generarArchivoAlta(data, filename) {
