@@ -47,27 +47,33 @@ function procesarArchivos(sociosFile, prestamosFile) {
     console.log('Datos Unificados:', mergedData);
 
     // Retornar los datos unificados
-    return mergedData;
+    //return mergedData;
+
+    generarArchivoAlta(mergedData,"alta.txt")
 }
 
 function generarArchivoAlta(data, filename) {
+
+    console.log("data" , data)
+
     const stream = fs.createWriteStream(filename, { encoding: 'ascii' });
+
     data.forEach(row => {
-        const linea = `${(row['CUIT'] || '').toString().padStart(11, ' ')}`
-                    + `${(row['TIPO_DOCUMENTO'] || '').toString().padStart(2, ' ')}`
-                    + `${(row['NUMERO_DOCUMENTO'] || '').toString().padStart(20, ' ')}`
-                    + `${(row['APELLIDO_Y_NOMBRE'] || '').toString().padStart(70, ' ')}`
-                    + `${(row['FECHA_NACIMIENTO'] || '').toString().padStart(8, ' ')}`
-                    + `${(row['TIPO_SOCIEDAD_PERSONA'] || '').toString().padStart(1, ' ')}`
-                    + `${(row['EST_CIVIL'] || '').toString().padStart(1, ' ')}`
-                    + `${(row['DIRECCION'] || '').toString().padStart(40, ' ')}`
-                    + `${(row['LOCALIDAD'] || '').toString().padStart(20, ' ')}`
-                    + `${(row['PROVINCIA'] || '').toString().padStart(1, ' ')}`
-                    + `${(row['COD_POSTAL'] || '').toString().padStart(8, ' ')}`
-                    + `${(row['TELEFONO_FIJO'] || '').toString().padStart(14, ' ')}`
-                    + `${(row['TELEFONO_CELULAR'] || '').toString().padStart(14, ' ')}`
-                    + `${(row['NACIONALIDAD'] || '').toString().padStart(1, ' ')}`
-                    + `${(row['RETORNO'] || '').toString().padStart(2, ' ')}\r\n`;
+        const linea = `${(row['LEGAJO'] || '').toString().padStart(11, ' ')}`
+                    // + `${(row['TIPO_DOCUMENTO'] || '').toString().padStart(2, ' ')}`
+                    // + `${(row['NUMERO_DOCUMENTO'] || '').toString().padStart(20, ' ')}`
+                    // + `${(row['APELLIDO_Y_NOMBRE'] || '').toString().padStart(70, ' ')}`
+                    // + `${(row['FECHA_NACIMIENTO'] || '').toString().padStart(8, ' ')}`
+                    // + `${(row['TIPO_SOCIEDAD_PERSONA'] || '').toString().padStart(1, ' ')}`
+                    // + `${(row['EST_CIVIL'] || '').toString().padStart(1, ' ')}`
+                    // + `${(row['DIRECCION'] || '').toString().padStart(40, ' ')}`
+                    // + `${(row['LOCALIDAD'] || '').toString().padStart(20, ' ')}`
+                    // + `${(row['PROVINCIA'] || '').toString().padStart(1, ' ')}`
+                    // + `${(row['COD_POSTAL'] || '').toString().padStart(8, ' ')}`
+                    // + `${(row['TELEFONO_FIJO'] || '').toString().padStart(14, ' ')}`
+                    // + `${(row['TELEFONO_CELULAR'] || '').toString().padStart(14, ' ')}`
+                    // + `${(row['NACIONALIDAD'] || '').toString().padStart(1, ' ')}`
+                    // + `${(row['RETORNO'] || '').toString().padStart(2, ' ')}\r\n`;
         stream.write(linea);
     });
     stream.end();
