@@ -1,41 +1,4 @@
-const XLSX = require('xlsx');
 const fs = require('fs');
-
-function procesarArchivos(sociosFile, prestamosFile, filePath) {
-    console.log('Entrando a procesarArchivos'); // Registro de depuración
-
-    // Leer archivos Excel
-    const sociosWorkbook = XLSX.read(sociosFile, { type: 'buffer' });
-    const prestamosWorkbook = XLSX.read(prestamosFile, { type: 'buffer' });
-
-    const sociosSheet = sociosWorkbook.Sheets[sociosWorkbook.SheetNames[0]];
-    const prestamosSheet = prestamosWorkbook.Sheets[prestamosWorkbook.SheetNames[0]];
-
-    const sociosData = XLSX.utils.sheet_to_json(sociosSheet);
-    const prestamosData = XLSX.utils.sheet_to_json(prestamosSheet);
-
-    // Crear un mapa para una búsqueda rápida de socios por 'LEGAJO BBVA'
-    const sociosMap = sociosData.reduce((map, socio) => {
-        const key = socio['LEGAJO BBVA'];
-        if (key === undefined) {
-            console.log('Objeto de socio sin LEGAJO BBVA:', socio);
-        }
-        map[key] = socio;
-        return map;
-    }, {});
-
-    console.log('Mapa de Socios:', sociosMap);
-
-    // Unir los datos por el número de legajo y asegurarse de que el resultado tenga la cantidad de registros de `prestamosData`
-    const mergedData = prestamosData.map(prestamo => {
-        const socio = sociosMap[prestamo.LEGAJO] || {};
-        return { ...prestamo, ...socio };
-    });
-
-    console.log('Datos Unificados:', mergedData);
-
-    generarArchivoAlta(mergedData, filePath);
-}
 
 function generarArchivoAlta(data, filePath) {
     console.log("Generando archivo de alta con los datos:", data);
@@ -65,7 +28,4 @@ function generarArchivoAlta(data, filePath) {
     stream.end();
 }
 
-module.exports = { procesarArchivos };
-
-
-
+module.exports = { generarArchivoAlta };

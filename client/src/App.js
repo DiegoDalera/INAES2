@@ -5,6 +5,7 @@ import './App.css';
 function App() {
     const [sociosFile, setSociosFile] = useState(null);
     const [prestamosFile, setPrestamosFile] = useState(null);
+    const [fileUrl, setFileUrl] = useState(null);
 
     const handleFileChange = (e, setFile) => {
         setFile(e.target.files[0]);
@@ -19,15 +20,21 @@ function App() {
         console.log('Enviando archivos:', sociosFile, prestamosFile);
 
         try {
-            const response = await axios.post('/upload', formData, {
+            const response = await axios.post('/api/upload', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
             console.log('Respuesta del servidor:', response.data);
-            alert(response.data);
+            if (response.data.filePath) {
+                // Ajustar la URL del archivo generado para incluir el puerto 5000
+                setFileUrl(`http://localhost:5000${response.data.filePath}`);
+            } else {
+                alert(response.data.message);
+            }
         } catch (error) {
             console.error('Error uploading files:', error);
+            alert('Error uploading files: ' + error.message);
         }
     };
 
@@ -45,9 +52,16 @@ function App() {
                 </div>
                 <button type="submit">Subir y Procesar</button>
             </form>
+            {fileUrl && (
+                <div>
+                    <a href={fileUrl} download="alta_deudores.txt">Descargar archivo generado</a>
+                </div>
+            )}
         </div>
     );
 }
 
 export default App;
+
+
 
