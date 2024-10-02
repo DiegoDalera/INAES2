@@ -46,7 +46,7 @@ function procesarArchivos(sociosFile, prestamosFile, filePath) {
         return { ...prestamo, ...socio };
     });
 
-    console.log('Datos Unificados:', mergedData);
+    //console.log('Datos Unificados:', mergedData);
 
     generarArchivoAlta(mergedData, filePath);
 }
