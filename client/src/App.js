@@ -7,6 +7,8 @@ function App() {
     const [prestamosFile, setPrestamosFile] = useState(null);
     const [fileUrl, setFileUrl] = useState(null);
 
+    const api_url = process.env.REACT_APP_API_URL
+
     const handleFileChange = (e, setFile) => {
         setFile(e.target.files[0]);
     };
@@ -28,7 +30,7 @@ function App() {
             console.log('Respuesta del servidor:', response.data);
             if (response.data.filePath) {
                 // Ajustar la URL del archivo generado para incluir el puerto 5000
-                setFileUrl(`http://localhost:5000${response.data.filePath}`);
+                setFileUrl(`api_url${response.data.filePath}`);
             } else {
                 alert(response.data.message);
             }
